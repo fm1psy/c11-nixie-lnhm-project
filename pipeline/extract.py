@@ -11,12 +11,9 @@ DEFAULT_RANGE = 50
 
 def get_plant_response(id: int) -> requests.Response:
     """Return a response object."""
-    try:
-        if not isinstance(id, int):
-            raise ValueError
-        return requests.get(BASE_URL+f"{id}")
-    except:
-        return {}
+    if not isinstance(id, int):
+        raise ValueError
+    return requests.get(BASE_URL+f"{id}")
 
 
 def get_range_of_plants(plant_range: int = DEFAULT_RANGE) -> list[dict]:
