@@ -26,9 +26,9 @@ def get_range_of_plants(plant_range: int = DEFAULT_RANGE) -> list[dict]:
             response = get_plant_response(i)
             res.append(response.json())
         except ValueError:
-            pass
-        except requests.ReadTimeout:
-            pass
+            print("VALUE ERROR")
+        except requests.exceptions.Timeout:
+            print("TIMEOUT")
     return res
 
 
