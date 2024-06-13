@@ -6,7 +6,7 @@ import requests
 BASE_URL = "https://data-eng-plants-api.herokuapp.com/plants/"
 EXTRACT_DESTINATION = "extracted_plants.json"
 DEFAULT_RANGE = 50
-DEFAULT_TIMEOUT = 2
+DEFAULT_TIMEOUT = 10
 
 
 def get_plant_response(plant_id: int, timeout: int = DEFAULT_TIMEOUT) -> requests.Response:
@@ -21,7 +21,7 @@ def get_range_of_plants(plant_range: int = DEFAULT_RANGE) -> list[dict]:
     res = []
     if not isinstance(plant_range, int):
         raise ValueError
-    for i in range(1, plant_range+1):
+    for i in range(0, plant_range):
         try:
             response = get_plant_response(i)
             res.append(response.json())
