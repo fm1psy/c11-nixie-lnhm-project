@@ -1,3 +1,7 @@
+__pycache__
+.pytest_cache
 .git.save
+.coverage
 .env
 *.csv
+*.json
