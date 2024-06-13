@@ -257,8 +257,6 @@ def format_values(data: list[dict]) -> list[dict]:
             if row[key] and key == 'scientific_name':
                 row[key] = row[key].replace(
                     "[", "").replace("]", "").replace("'", "").replace('"', '')
-            if key == 'name':
-                row[key] = row[key].upper()
     return data
 
 
