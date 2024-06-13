@@ -4,13 +4,29 @@ import json
 
 def get_dataframe_from_json():
     """creates dataframe from json extracted in extract.py"""
-    with open('example.json') as file:
+    with open('extracted_plants.json') as file:
         plants = json.load(file)
     return pd.json_normalize(plants)
 
 
-def remove_errors():
-    ...
+def remove_images_columns(plants_df):
+    plants_df = plants_df.drop('images.license', axis=1)
+    plants_df = plants_df.drop('images.license_name', axis=1)
+    plants_df = plants_df.drop('images.license_url', axis=1)
+    plants_df = plants_df.drop('images.medium_url', axis=1)
+    plants_df = plants_df.drop('images.original_url', axis=1)
+    plants_df = plants_df.drop('images.regular_url', axis=1)
+    plants_df = plants_df.drop('images.small_url', axis=1)
+    plants_df = plants_df.drop('images.thumbnail', axis=1)
+    plants_df = plants_df.drop('images', axis=1)
+    return plants_df
+
+
+def remove_errors(plants_df):
+    plants_df = plants_df.dropna(
+        subset=['name', 'soil_moisture', 'temperature', 'last_watered', 'plant_id'])
+    plants_df = plants_df.drop('error', axis=1)
+    return plants_df
 
 
 def remove_invalid_values(plants_df):
@@ -18,6 +34,19 @@ def remove_invalid_values(plants_df):
     plants_df = plants_df[plants_df['soil_moisture'] > 0]
     plants_df = plants_df[plants_df['temperature'] < 50]
     plants_df = plants_df[plants_df['temperature'] > 0]
+    plants_df = plants_df[plants_df['plant_id'] > 0]
+    return plants_df
+
+
+def set_correct_data_types(plants_df):
+    plants_df['botanist.email'] = plants_df["botanist.email"].astype(str)
+    plants_df['location_lon'] = plants_df["location_lon"].astype(float)
+    plants_df['location_lat'] = plants_df["location_lat"].astype(float)
+    plants_df['recording_taken'] = pd.to_datetime(
+        plants_df['recording_taken'], format='%Y-%m-%d %X')
+    plants_df['last_watered'] = pd.to_datetime(
+        plants_df['last_watered'], format='%a, %d %b %Y %X GMT')
+    return plants_df
 
 
 def split_location_data_into_columns(plants_df):
@@ -28,7 +57,15 @@ def split_location_data_into_columns(plants_df):
     return plants_df
 
 
+def dataframe_to_csv(plants_df):
+    plants_df.to_csv('transformed_plants.csv', index=False)
+
+
 if __name__ == "__main__":
     plants_df = get_dataframe_from_json()
+    plants_df = remove_images_columns(plants_df)
+    plants_df = remove_errors(plants_df)
     plants_df = split_location_data_into_columns(plants_df)
-    print(plants_df)
+    plants_df = remove_invalid_values(plants_df)
+    plants_df = set_correct_data_types(plants_df)
+    dataframe_to_csv(plants_df)
