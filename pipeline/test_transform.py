@@ -37,9 +37,18 @@ def example_dataframe():
          "last_watered": "Mon, 10 Jun 2024 14:10:54 GMT",
          "name": "Corpse flower",
          "origin_location": ["7.65649", "4.92235", "Efon-Alaaye", "NG", "Africa/Lagos"],
-         "plant_id": 2,
+         "plant_id": 3,
          "recording_taken": "2024-06-11 11:30:55",
          "temperature": 9.138506163148168
+         },
+        {"botanist": {"email": "invalid_value@lnhm.co.uk",
+                      "name": "Invalid Value",
+                      "phone": "001-481-273-3691x127"},
+            "last_watered": "Mon, 10 Jun 2024 13:54:32 GMT", "name": "Invalid Value Plant",
+            "origin_location": ["33.95015", "-118.03917", "South Whittier", "US", "America/Los_Angeles"],
+            "plant_id": 4,
+            "recording_taken": "2024-06-11 11:29:25",
+            "soil_moisture": 112, "temperature": 12.033255788902762
          }
     ]
     plants_df = pd.json_normalize(example_data)
@@ -52,7 +61,10 @@ def test_remove_errors(example_dataframe):
 
 
 def test_remove_invalid_values(example_dataframe):
-    ...
+    no_error_df = remove_errors(example_dataframe)
+    invalid_values_removed_df = remove_invalid_values(no_error_df)
+    assert invalid_values_removed_df['name'].isin(
+        ['Invalid Value Plant']).any() == False
 
 
 def test_set_correct_data_types(example_dataframe):

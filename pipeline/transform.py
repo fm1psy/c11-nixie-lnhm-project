@@ -10,19 +10,13 @@ def get_dataframe_from_json():
 
 
 def remove_images_columns(plants_df):
-    plants_df = plants_df.drop('images.license', axis=1)
-    plants_df = plants_df.drop('images.license_name', axis=1)
-    plants_df = plants_df.drop('images.license_url', axis=1)
-    plants_df = plants_df.drop('images.medium_url', axis=1)
-    plants_df = plants_df.drop('images.original_url', axis=1)
-    plants_df = plants_df.drop('images.regular_url', axis=1)
-    plants_df = plants_df.drop('images.small_url', axis=1)
-    plants_df = plants_df.drop('images.thumbnail', axis=1)
-    plants_df = plants_df.drop('images', axis=1)
+    """removes all columns concerning images"""
+    plants_df.loc[:, ~plants_df.columns.str.startswith('images')]
     return plants_df
 
 
 def remove_errors(plants_df):
+    """removes rows that have missing key information"""
     plants_df = plants_df.dropna(
         subset=['name', 'soil_moisture', 'temperature', 'last_watered', 'plant_id'])
     plants_df = plants_df.drop('error', axis=1)
@@ -30,6 +24,7 @@ def remove_errors(plants_df):
 
 
 def remove_invalid_values(plants_df):
+    """removes values that are not within a valid range"""
     plants_df = plants_df[plants_df['soil_moisture'] < 100]
     plants_df = plants_df[plants_df['soil_moisture'] > 0]
     plants_df = plants_df[plants_df['temperature'] < 50]
@@ -39,6 +34,7 @@ def remove_invalid_values(plants_df):
 
 
 def set_correct_data_types(plants_df):
+    """changes data types to the correct data type"""
     plants_df['botanist.email'] = plants_df["botanist.email"].astype(str)
     plants_df['location_lon'] = plants_df["location_lon"].astype(float)
     plants_df['location_lat'] = plants_df["location_lat"].astype(float)
@@ -50,6 +46,7 @@ def set_correct_data_types(plants_df):
 
 
 def split_location_data_into_columns(plants_df):
+    """splits list with location data into separate columns for each piece of data"""
     location = pd.DataFrame(plants_df['origin_location'].to_list(), columns=[
         'location_lon', 'location_lat', 'location_city', 'country_code', 'timezone'])
     plants_df = pd.concat([plants_df, location], axis=1)
@@ -58,10 +55,12 @@ def split_location_data_into_columns(plants_df):
 
 
 def dataframe_to_csv(plants_df):
+    """converts dataframe into a csv file"""
     plants_df.to_csv('transformed_plants.csv', index=False)
 
 
-if __name__ == "__main__":
+def transform():
+    """calls all necessary functions for cleaning and transforming the data"""
     plants_df = get_dataframe_from_json()
     plants_df = remove_images_columns(plants_df)
     plants_df = remove_errors(plants_df)
@@ -69,3 +68,7 @@ if __name__ == "__main__":
     plants_df = remove_invalid_values(plants_df)
     plants_df = set_correct_data_types(plants_df)
     dataframe_to_csv(plants_df)
+
+
+if __name__ == "__main__":
+    transform()
