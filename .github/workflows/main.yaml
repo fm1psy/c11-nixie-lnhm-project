@@ -20,6 +20,9 @@ jobs:
       - name: "Install all libraries"
         run: |
           pip3 install -r requirements.txt
+          sudo apt-get update
+          sudo apt-get install -y freetds-dev freetds-bin libkrb5-dev
+          pip install --no-binary :all: pymssql --no-cache
           echo "Done installing all libraries!"
       - name: "Run Pytest"
         run: pytest
