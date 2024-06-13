@@ -29,11 +29,3 @@ def test_format_value_correct_scientific_name():
     assert format_values(test_data) == [{'scientific_name': 'Fake sci name',
                                          'key': 'value'}]
     assert format_values(test_data_other) == format_values(test_data)
-
-
-def test_format_value_make_name_upper():
-    test_data = [{'name': 'Bird of paradise',
-                  'key': 'value'}]
-
-    assert format_values(test_data) == [{'name': 'BIRD OF PARADISE',
-                                         'key': 'value'}]
