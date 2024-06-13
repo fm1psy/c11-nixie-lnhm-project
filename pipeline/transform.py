@@ -11,7 +11,7 @@ def get_dataframe_from_json():
 
 def remove_images_columns(plants_df):
     """removes all columns concerning images"""
-    plants_df.loc[:, ~plants_df.columns.str.startswith('images')]
+    plants_df = plants_df.loc[:, ~plants_df.columns.str.startswith('images')]
     return plants_df
 
 
