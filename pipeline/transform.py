@@ -23,6 +23,12 @@ def remove_errors(plants_df):
     return plants_df
 
 
+def capitalise_plant_name(plants_df):
+    """captialises the names of the plants"""
+    plants_df['name'] = plants_df['name'].str.title()
+    return plants_df
+
+
 def remove_invalid_values(plants_df):
     """removes values that are not within a valid range"""
     plants_df = plants_df[plants_df['soil_moisture'] < 100]
@@ -42,6 +48,7 @@ def set_correct_data_types(plants_df):
         plants_df['recording_taken'], format='%Y-%m-%d %X')
     plants_df['last_watered'] = pd.to_datetime(
         plants_df['last_watered'], format='%a, %d %b %Y %X GMT')
+    plants_df = capitalise_plant_name(plants_df)
     return plants_df
 
 
