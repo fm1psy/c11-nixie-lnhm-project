@@ -29,6 +29,8 @@ def get_range_of_plants(plant_range: int = DEFAULT_RANGE) -> list[dict]:
             print("VALUE ERROR")
         except requests.exceptions.Timeout:
             print("TIMEOUT")
+        except OSError:
+            print("OSError")
     return res
 
 
