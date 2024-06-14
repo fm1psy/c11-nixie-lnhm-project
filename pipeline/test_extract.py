@@ -1,7 +1,7 @@
 # pylint: ignore-pylint
 import pytest
 import requests
-from extract import get_plant_response, get_range_of_plants, extract_data
+from extract import get_plant_response, get_plant_data_async, extract_data
 from unittest.mock import Mock, patch, mock_open
 EXTRACT_DESTINATION = "extracted_plants.json"
 
@@ -39,7 +39,7 @@ def test_get_response_error(mock_request, mock_response):
 @patch("extract.requests.get")
 def test_get_range_of_plants(mock_request, mock_response):
     mock_request.return_value = mock_response
-    get_range_of_plants(2)
+    get_plant_data_async(2)
     assert mock_request.call_count == 2
 
 
@@ -47,25 +47,25 @@ def test_get_range_of_plants(mock_request, mock_response):
 def test_get_range_of_plants_invalid_range(mock_request, mock_response):
     mock_request.return_value = mock_response
     with pytest.raises(ValueError):
-        get_range_of_plants("three")
+        get_plant_data_async("three")
 
 
 @patch("extract.requests.get")
 def test_get_range_of_plants_success(mock_request, mock_response):
     mock_request.return_value = mock_response
-    res = get_range_of_plants(2)
+    res = get_plant_data_async(2)
     assert len(res) == 2
 
 
 @patch("extract.get_plant_response", side_effect=ValueError)
 def test_get_range_of_plants_value_error(mock_plant_response, capsys):
-    get_range_of_plants(2)
+    get_plant_data_async(2)
     assert "VALUE ERROR" in capsys.readouterr().out
 
 
 @ patch("extract.get_plant_response", side_effect=requests.exceptions.Timeout)
 def test_get_range_of_plants_timeout_error(mock_plant_response, capsys):
-    get_range_of_plants(2)
+    get_plant_data_async(2)
     assert "TIMEOUT" in capsys.readouterr().out
 
 
