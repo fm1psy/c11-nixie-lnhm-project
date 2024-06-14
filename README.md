@@ -30,8 +30,9 @@ The `pipeline` folder contains all of the documents needed for the ETL pipeline.
 
 ## Cloud hosting
 ### Terraforming
-This solution uses terraform to automate the infrastructure needed to enable cloud hosting. It uses AWS as its cloud service provider, and will require you to follow these steps:
-create
+This solution uses terraform to automate the infrastructure needed to enable cloud hosting. It uses AWS as its cloud service provider, and will require you to follow the steps on the README file. Once those are done, you should be able to host each service/function by running a bash command inside the script.
+
+Note: to reduce the potential for error, make sure each function of this system has a container built and hosted on the cloud before you terraform.
 
 ## Documentation
 ### ERD Diagram
