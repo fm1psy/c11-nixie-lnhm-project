@@ -7,17 +7,19 @@ from load import loading_main
 def lambda_handler(event=None, context=None) -> dict:
     """ LAMBDA HANDLER!!! """
     try:
-        extract_data()
+        data = extract_data()
         print("extract done.")
-        transform()
+        trans_data = transform(data)
         print("transform done.")
-        loading_main()
+        loading_main(trans_data)
         return {"status": "SUCCESSS!!!!!"}
     except Exception as e:
         return {"error": e}
 
 
 if __name__ == "__main__":
-    extract_data()
-    transform()
-    loading_main()
+    data = extract_data()
+    print("extract done.")
+    trans_data = transform(data)
+    print("transform done.")
+    loading_main(trans_data)
