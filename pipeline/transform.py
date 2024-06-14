@@ -4,9 +4,12 @@ import json
 
 def get_dataframe_from_json():
     """creates dataframe from json extracted in extract.py"""
-    with open('extracted_plants.json') as file:
-        plants = json.load(file)
-    return pd.json_normalize(plants)
+    try:
+        with open('extracted_plants.json') as file:
+            plants = json.load(file)
+        return pd.json_normalize(plants)
+    except OSError:
+        print("Loading failed in tranform.")
 
 
 def remove_images_columns(plants_df):

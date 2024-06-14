@@ -5,7 +5,6 @@ __pycache__
 .env
 *.csv
 *.json
-
 .terraform
 *.tfstate
 *.tfstate.*
@@ -13,3 +12,4 @@ __pycache__
 *tfvars.json
 .terraform.tfstate.lock.info
 .terraform.lock.hcl
+.venv
