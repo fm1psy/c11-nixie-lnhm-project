@@ -4,7 +4,7 @@ import time
 import json
 import requests
 BASE_URL = "https://data-eng-plants-api.herokuapp.com/plants/"
-EXTRACT_DESTINATION = "extracted_plants.json"
+EXTRACT_DESTINATION = "/tmp/extracted_plants.json"
 DEFAULT_RANGE = 50
 DEFAULT_TIMEOUT = 10
 

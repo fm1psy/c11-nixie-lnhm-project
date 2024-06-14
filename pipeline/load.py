@@ -3,6 +3,7 @@ from os import environ as ENV
 import csv
 from dotenv import load_dotenv
 from pymssql import connect, Connection
+TRANSFORM_DESTINATION = '/tmp/transformed_plants.csv'
 
 
 def load_data(filename: str) -> list:
@@ -264,7 +265,7 @@ def loading_main():
     """Main run of functions. """
     load_dotenv()
     connection = get_con()
-    data = format_values(load_data('transformed_plants.csv'))
+    data = format_values(load_data(TRANSFORM_DESTINATION))
     loading_data(connection, data)
     connection.close()
 

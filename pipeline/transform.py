@@ -1,11 +1,12 @@
 import pandas as pd
 import json
+TRANSFORM_DESTINATION = '/tmp/transformed_plants.csv'
 
 
 def get_dataframe_from_json():
     """creates dataframe from json extracted in extract.py"""
     try:
-        with open('extracted_plants.json') as file:
+        with open('/tmp/extracted_plants.json') as file:
             plants = json.load(file)
         return pd.json_normalize(plants)
     except OSError:
@@ -66,7 +67,7 @@ def split_location_data_into_columns(plants_df):
 
 def dataframe_to_csv(plants_df):
     """converts dataframe into a csv file"""
-    plants_df.to_csv('transformed_plants.csv', index=False)
+    plants_df.to_csv(TRANSFORM_DESTINATION, index=False)
 
 
 def transform():
