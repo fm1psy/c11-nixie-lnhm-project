@@ -51,7 +51,7 @@ resource "aws_lambda_function" "c11-nixie-lnhm-etl-lambda" {
     package_type  = "Image"
     image_uri     = var.PIPELINE_URI
     architectures = ["x86_64"]
-    timeout       = 15
+    timeout       = 120
 
     environment {
         variables = {
