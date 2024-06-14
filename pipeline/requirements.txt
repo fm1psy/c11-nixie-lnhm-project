@@ -4,3 +4,4 @@ python-dotenv
 pandas
 requests
 pymssql
+lambda_multiprocessing

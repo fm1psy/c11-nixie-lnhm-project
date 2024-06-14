@@ -2,12 +2,12 @@ import pandas as pd
 import json
 
 
-def get_dataframe_from_json():
+def get_dataframe_from_json(plant_data: list[dict]):
     """creates dataframe from json extracted in extract.py"""
     try:
-        with open('extracted_plants.json') as file:
-            plants = json.load(file)
-        return pd.json_normalize(plants)
+        # with open('extracted_plants.json') as file:
+        #     plants = json.load(file)
+        return pd.json_normalize(plant_data)
     except OSError:
         print("Loading failed in tranform.")
 
@@ -69,15 +69,15 @@ def dataframe_to_csv(plants_df):
     plants_df.to_csv('transformed_plants.csv', index=False)
 
 
-def transform():
+def transform(plant_data: list[dict]) -> pd.DataFrame:
     """calls all necessary functions for cleaning and transforming the data"""
-    plants_df = get_dataframe_from_json()
+    plants_df = get_dataframe_from_json(plant_data)
     plants_df = remove_images_columns(plants_df)
     plants_df = remove_errors(plants_df)
     plants_df = split_location_data_into_columns(plants_df)
     plants_df = remove_invalid_values(plants_df)
     plants_df = set_correct_data_types(plants_df)
-    dataframe_to_csv(plants_df)
+    return plants_df
 
 
 if __name__ == "__main__":

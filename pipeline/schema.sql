@@ -18,37 +18,6 @@ CREATE TABlE beta.country (
     PRIMARY KEY (country_id)
 )
 
--- INSERT INTO beta.country (country_code)
--- VALUES 
--- ("BR"), 
--- ("US"), 
--- ("NG"), 
--- ("SV"), 
--- ("IN"), 
--- ("CA"), 
--- ("CI"), 
--- ("DE"), 
--- ("HR"), 
--- ("TN"), 
--- ("ID"), 
--- ("BW"), 
--- ("ES"), 
--- ("JP"), 
--- ("SD"), 
--- ("DZ"), 
--- ("UA"), 
--- ("LY"), 
--- ("CN"), 
--- ("CL"), 
--- ("TZ"), 
--- ("FR"),
--- ("BG"),
--- ("MX"), 
--- ("MW"), 
--- ("IT"), 
--- ("PH")
--- ;
-
 CREATE TABLE beta.botanist (
     botanist_id INT IDENTITY(1, 1),
     botanist_full_name TEXT NOT NULL,

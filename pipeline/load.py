@@ -1,16 +1,17 @@
 """Load pipeline script"""
 from os import environ as ENV
 import csv
+import pandas as pd
+import numpy as np
 from dotenv import load_dotenv
 from pymssql import connect, Connection
 
 
-def load_data(filename: str) -> list:
+def load_data(transformed_data: pd.DataFrame) -> list:
     """Load csv into a list of dictionary"""
-    with open(filename, "r", encoding="utf-8") as file:
-        csv_reader = csv.DictReader(file)
-        rows = list(csv_reader)
-    return rows
+    transformed_data = pd.DataFrame(transformed_data).replace({np.nan: None})
+    data = transformed_data.to_dict('records')
+    return data
 
 
 def get_con():
@@ -248,23 +249,18 @@ def format_values(data: list[dict]) -> list[dict]:
     """Sets empty values to None. Corrects data types csv changed. """
     for row in data:
         for key in row:
-            if isinstance(row[key], str) and len(row[key]) == 0:
-                row[key] = None
             if row[key] and key == 'plant_id':
-                row[key] = int(float(row[key]))
-            if row[key] and (key in ('soil_moisture', 'temperature')):
-                row[key] = float(row[key])
+                row[key] = int(row[key])
             if row[key] and key == 'scientific_name':
-                row[key] = row[key].replace(
-                    "[", "").replace("]", "").replace("'", "").replace('"', '')
+                row[key] = row[key][0]
     return data
 
 
-def loading_main():
+def loading_main(transformed_data: pd.DataFrame):
     """Main run of functions. """
     load_dotenv()
     connection = get_con()
-    data = format_values(load_data('transformed_plants.csv'))
+    data = format_values(load_data(transformed_data))
     loading_data(connection, data)
     connection.close()
 
