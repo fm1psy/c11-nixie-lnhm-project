@@ -23,6 +23,23 @@ data "aws_iam_policy_document" "assume_role" {
     }
 }
 
+resource "aws_iam_policy" "c11-nixie-lambda-logging-policy" {
+  name   = "c11-nixie-lambda-logging-policy"
+  policy = jsonencode({
+    "Version" : "2012-10-17",
+    "Statement" : [
+      {
+        Action : [
+          "logs:CreateLogStream",
+          "logs:PutLogEvents"
+        ],
+        Effect : "Allow",
+        Resource : "arn:aws:logs:*:*:*"
+      }
+    ]
+  })
+}
+
 data "aws_iam_policy_document" "eventbridge_role" {
     statement {
         effect = "Allow"
@@ -39,12 +56,23 @@ resource "aws_iam_role" "iam_for_lambda" {
     name               = "iam_for_lambda"
     assume_role_policy = data.aws_iam_policy_document.assume_role.json
 }
+resource "aws_iam_role_policy_attachment" "lambda-logging-attachment" {
+    role = aws_iam_role.iam_for_lambda.id
+    policy_arn = aws_iam_policy.c11-nixie-lambda-logging-policy.arn
+}
 resource "aws_iam_role" "iam_for_eventbridge" {
     name               = "iam_for_eventbridge"
     assume_role_policy = data.aws_iam_policy_document.eventbridge_role.json
 }
 
 # ETL lambda
+resource "aws_cloudwatch_log_group" "lambda_log_group" {
+  name              = "/aws/lambda/c11-nixie-lnhm-etl-lambda"
+  retention_in_days = 7
+  lifecycle {
+    prevent_destroy = false
+  }
+}
 resource "aws_lambda_function" "c11-nixie-lnhm-etl-lambda" {
     function_name = "c11-nixie-lnhm-etl-lambda"
     role          = aws_iam_role.iam_for_lambda.arn
@@ -52,6 +80,8 @@ resource "aws_lambda_function" "c11-nixie-lnhm-etl-lambda" {
     image_uri     = var.PIPELINE_URI
     architectures = ["x86_64"]
     timeout       = 120
+
+    depends_on = [aws_cloudwatch_log_group.lambda_log_group]
 
     environment {
         variables = {
